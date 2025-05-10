@@ -23,6 +23,8 @@ This project is focused on:
 
 It's possible to see the documentation for the project in the /docs folder. They consist of the base UML diagrams modeled in the classes of my postgraduate program, along with any additional documentation added through the development.
 
+The diagrams are in PT-BR and it's planned to translate them to english.
+
 ## Stack
 
 This project is written as a full-stack web application. It aims to explore new technologies and deepen existing knowledge. Below is a table of the used technologies.
@@ -33,3 +35,9 @@ This project is written as a full-stack web application. It aims to explore new 
 | Gin              | Web framework for the API    |
 | PostgreSQL       | Database management          |
 | Svelte (planned) | Frontend framework           |
+
+## Next Steps
+
+- [ ] Translate UML diagrams to english
+- [ ] Develop the backend of the application following the documentation specifications
+- [ ] Develop the frontend of the application following the documentation specifications
