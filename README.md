@@ -23,6 +23,8 @@ This project is focused on:
 
 It's possible to see the documentation for the project in the /docs folder. They consist of the base UML diagrams modeled in the classes of my postgraduate program, along with any additional documentation added through the development.
 
+The diagrams were made using Astah UML and the wireframes using Figma.
+
 The diagrams are in PT-BR and it's planned to translate them to english.
 
 ## Stack
@@ -31,6 +33,8 @@ This project is written as a full-stack web application. It aims to explore new 
 
 | Technology       | Application                  |
 | ---------------- | ---------------------------- |
+| Astah UML        | UML diagrams                 |
+| Figma            | Wireframes                   |
 | Go               | Backend programming language |
 | Gin              | Web framework for the API    |
 | PostgreSQL       | Database management          |
