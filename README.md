@@ -42,6 +42,7 @@ This project is written as a full-stack web application. It aims to explore new 
 
 ## Next Steps
 
+- [x] Add an endpoint diagram
 - [ ] Translate UML diagrams to english
 - [ ] Develop the backend of the application following the documentation specifications
 - [ ] Develop the frontend of the application following the documentation specifications
