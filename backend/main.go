@@ -11,14 +11,17 @@ import (
 const PORT = "8080"
 
 func main() {
+	utils.LoadEnvironment()
 	router := gin.Default()
 
-	utils.LoadEnvironment()
 	routes.RegisterRoutes(router)
 
-	fmt.Println()
+	fmt.Print("\n")
+
+	utils.ConnectToDatabase()
 	fmt.Println("Starting server on port " + PORT)
-	fmt.Println()
-	fmt.Println()
+
+	fmt.Print("\n")
+
 	router.Run(":" + PORT)
 }
