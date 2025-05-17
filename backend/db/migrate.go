@@ -21,7 +21,7 @@ func Migrate() {
 		_, err := Connection.Exec(context.Background(), sql)
 
 		if err != nil {
-			fmt.Println("Failed to execute schema for file", paths[index])
+			fmt.Println("Failed to execute schema for file", paths[index], ":", err)
 			continue
 		}
 
