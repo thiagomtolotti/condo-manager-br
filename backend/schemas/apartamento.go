@@ -8,6 +8,6 @@ type Apartamento struct {
 }
 
 type ApartamentoWithId struct {
-	Id uuid.UUID `json:id`
+	Id uuid.UUID `json:"id"`
 	Apartamento
 }
