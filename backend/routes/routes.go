@@ -2,6 +2,7 @@ package routes
 
 import (
 	"backend/controllers"
+	apartamentoController "backend/controllers/apartamento"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,5 +14,5 @@ func RegisterRoutes(router *gin.Engine) {
 }
 
 func registerApartamentoRoutes(router *gin.Engine) {
-	router.POST("/apartamento", controllers.CreateApartamento)
+	router.POST("/apartamento", apartamentoController.Create)
 }

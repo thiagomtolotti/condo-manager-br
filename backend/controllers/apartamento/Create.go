@@ -1,4 +1,4 @@
-package controllers
+package apartamentoController
 
 import (
 	"backend/models"
@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateApartamento(c *gin.Context) {
+func Create(c *gin.Context) {
 	var body schemas.Apartamento
 
 	decoder := json.NewDecoder(c.Request.Body)
@@ -25,6 +25,8 @@ func CreateApartamento(c *gin.Context) {
 
 	if err != nil {
 		fmt.Println("Erro creating apartment: ", err)
+
+		// TODO: Treat the error accordingly (HTTPError strategy)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
 		return
 	}
