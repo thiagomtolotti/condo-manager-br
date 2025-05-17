@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/db"
 	routes "backend/router"
 	"backend/utils"
 	"fmt"
@@ -18,7 +19,8 @@ func main() {
 
 	fmt.Print("\n")
 
-	utils.ConnectToDatabase()
+	conn := utils.ConnectToDatabase()
+	db.Migrate(conn)
 	fmt.Println("Starting server on port " + PORT)
 
 	fmt.Print("\n")
