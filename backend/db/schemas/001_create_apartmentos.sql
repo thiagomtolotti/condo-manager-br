@@ -1,0 +1,7 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS apartmentos (
+	id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	numero INTEGER NOT NULL,
+	bloco VARCHAR(10) NOT NULL
+)
