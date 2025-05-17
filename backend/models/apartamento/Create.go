@@ -1,4 +1,4 @@
-package models
+package apartmentModel
 
 import (
 	"backend/db"
