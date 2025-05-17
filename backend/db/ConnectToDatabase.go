@@ -1,4 +1,4 @@
-package utils
+package db
 
 import (
 	"context"
@@ -9,7 +9,9 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func ConnectToDatabase() *pgx.Conn {
+var Connection *pgx.Conn
+
+func ConnectToDatabase() {
 	url := os.Getenv("DATABASE_URL")
 
 	if url == "" {
@@ -23,5 +25,6 @@ func ConnectToDatabase() *pgx.Conn {
 	}
 
 	fmt.Println("Successfully connected to database!")
-	return conn
+
+	Connection = conn
 }

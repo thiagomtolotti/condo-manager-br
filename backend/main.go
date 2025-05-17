@@ -2,8 +2,9 @@ package main
 
 import (
 	"backend/db"
-	routes "backend/router"
+	"backend/routes"
 	"backend/utils"
+
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -19,8 +20,8 @@ func main() {
 
 	fmt.Print("\n")
 
-	conn := utils.ConnectToDatabase()
-	db.Migrate(conn)
+	db.ConnectToDatabase()
+	db.Migrate()
 	fmt.Println("Starting server on port " + PORT)
 
 	fmt.Print("\n")

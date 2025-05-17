@@ -7,11 +7,9 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-
-	"github.com/jackc/pgx/v5"
 )
 
-func Migrate(conn *pgx.Conn) {
+func Migrate() {
 	paths := getSchemaFilesPaths()
 	fileBytes := readSchemaFiles(paths)
 
@@ -20,7 +18,7 @@ func Migrate(conn *pgx.Conn) {
 	for index, bytes := range fileBytes {
 		sql := getStringFromBytes(bytes)
 
-		_, err := conn.Exec(context.Background(), sql)
+		_, err := Connection.Exec(context.Background(), sql)
 
 		if err != nil {
 			fmt.Println("Failed to execute schema for file", paths[index])

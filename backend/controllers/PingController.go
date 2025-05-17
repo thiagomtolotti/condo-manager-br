@@ -6,6 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Ping(c *gin.Context) {
+func PingController(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Service is online"})
 }

@@ -7,5 +7,5 @@ import (
 )
 
 func RegisterRoutes(router *gin.Engine) {
-	router.GET("/", controllers.Ping)
+	router.GET("/", controllers.PingController)
 }
