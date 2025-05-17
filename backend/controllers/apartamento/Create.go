@@ -31,5 +31,6 @@ func Create(c *gin.Context) {
 		return
 	}
 
+	// TODO: Return id with the apartment created
 	c.JSON(http.StatusOK, gin.H{"message": "Apartamento criado com sucesso!"})
 }
