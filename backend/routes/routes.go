@@ -16,4 +16,5 @@ func RegisterRoutes(router *gin.Engine) {
 func registerApartamentoRoutes(router *gin.Engine) {
 	router.GET("/apartamento", apartamentoController.Get)
 	router.POST("/apartamento", apartamentoController.Create)
+	router.DELETE("/apartamento/:id", apartamentoController.Delete)
 }
