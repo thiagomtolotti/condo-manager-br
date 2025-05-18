@@ -2,9 +2,9 @@ package apartamentoController
 
 import (
 	apartmentModel "backend/models/apartamento"
+	"backend/utils"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -13,7 +13,7 @@ import (
 func Delete(c *gin.Context) {
 	id := c.Param("id")
 
-	if !validateId(id) {
+	if !utils.ValidateId(id) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "É necessário fornecer um id válido"})
 		return
 	}
@@ -29,16 +29,4 @@ func Delete(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Apartamento excluído com sucesso!"})
-}
-
-func validateId(id string) bool {
-	if len(strings.TrimSpace(id)) == 0 {
-		return false
-	}
-
-	if err := uuid.Validate(id); err != nil {
-		return false
-	}
-
-	return true
 }
