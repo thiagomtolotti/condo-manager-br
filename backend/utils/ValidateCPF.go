@@ -1,4 +1,4 @@
-package moradorService
+package utils
 
 import (
 	"strings"
