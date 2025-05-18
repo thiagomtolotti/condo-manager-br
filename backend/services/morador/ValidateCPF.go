@@ -3,11 +3,11 @@ package moradorService
 import (
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
 // https://www.macoratti.net/alg_cpf.htm
 func ValidateCPF(cpf string) bool {
-	// TODO: Sanitize cpf
 	cpf = strings.ReplaceAll(cpf, ".", "")
 	cpf = strings.ReplaceAll(cpf, "-", "")
 
@@ -15,45 +15,84 @@ func ValidateCPF(cpf string) bool {
 		return false
 	}
 
-	var multiplyResult int
-	for index, character := range cpf {
-		if index > 8 {
-			break
-		}
-		if !unicode.IsDigit(character) {
-			return false
-		}
-
-		number := int(character - '0')
-
-		multiplyResult += number * (10 - index)
-	}
-	var verificationDigits [2]int
-	verificationDigits[0] = ((multiplyResult * 10) % 11) % 10
-
-	if verificationDigits[0] != int(cpf[9]-'0') {
+	if areAllDigitsEqual(cpf) {
 		return false
 	}
 
-	var newMultiplyResult int
-	for index, character := range cpf {
-		if index > 9 {
-			break
+	var digits [11]int
+	for i, digit := range cpf {
+		if !unicode.IsDigit(digit) {
+			return false
 		}
 
-		number := int(character - '0')
-		newMultiplyResult += number * (11 - index)
+		digits[i] = int(digit - '0')
 	}
 
-	verificationDigits[1] = ((newMultiplyResult * 10) % 11) % 10
+	firstVerificationDigit := int(cpf[9] - '0')
+	secondVerificationDigit := int(cpf[10] - '0')
 
-	if verificationDigits[1] != int(cpf[10]-'0') {
+	if firstVerificationDigit != getFirstVerificationDigit(digits) {
+		return false
+	}
+
+	if secondVerificationDigit != getSecondVerificationDigit(digits) {
 		return false
 	}
 
 	return true
 }
 
-func isDigit(r rune) bool {
-	return unicode.IsDigit(r)
+func areAllDigitsEqual(val string) bool {
+	for index, digit := range val {
+		if index == 0 {
+			continue
+		}
+
+		prevDigit, _ := utf8.DecodeRune([]byte{val[index-1]})
+		if prevDigit != digit {
+			return false
+		}
+	}
+
+	return true
+}
+
+func getFirstVerificationDigit(cpf [11]int) int {
+	var multiplyResult int
+
+	for index, curr := range cpf {
+		if index > 8 {
+			break
+		}
+
+		multiplyResult += curr * (10 - index)
+	}
+
+	verificationDigit := (multiplyResult * 10) % 11
+
+	if verificationDigit == 10 {
+		return 0
+	}
+
+	return verificationDigit
+}
+
+func getSecondVerificationDigit(cpf [11]int) int {
+	var multiplyResult int
+
+	for index, curr := range cpf {
+		if index > 9 {
+			break
+		}
+
+		multiplyResult += curr * (11 - index)
+	}
+
+	verificationDigit := (multiplyResult * 10) % 11
+
+	if verificationDigit == 10 {
+		return 0
+	}
+
+	return verificationDigit
 }
