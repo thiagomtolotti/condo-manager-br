@@ -4,7 +4,7 @@ import (
 	moradorModel "backend/models/morador"
 	"backend/schemas"
 	apartamentoService "backend/services/apartamento"
-	"backend/utils"
+	moradorService "backend/services/morador"
 	"fmt"
 	"net/http"
 
@@ -21,9 +21,14 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	// TODO: Validate if no morador with the cpf exists
-	if !utils.ValidateCPF(body.Cpf) {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
+	isValid, err := moradorService.Validate(body.Cpf)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+	}
+
+	if !isValid {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido ou com morador já cadastrado"})
 		return
 	}
 
@@ -50,9 +55,9 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	err := moradorModel.Create(body)
+	createErr := moradorModel.Create(body)
 
-	if err != nil {
+	if createErr != nil {
 		fmt.Println("Error creating user: ", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
 		return
