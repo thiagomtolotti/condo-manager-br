@@ -22,6 +22,7 @@ func Get(c *gin.Context) {
 	if fetchErr != nil {
 		fmt.Println("Error fetching apartment: ", fetchErr)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		return
 	}
 
 	// TODO: Return the total count of apartments (for pagination in the FE)
