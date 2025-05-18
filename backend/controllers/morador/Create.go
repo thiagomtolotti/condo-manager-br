@@ -3,6 +3,7 @@ package moradorController
 import (
 	moradorModel "backend/models/morador"
 	"backend/schemas"
+	apartamentoService "backend/services/apartamento"
 	"backend/utils"
 	"fmt"
 	"net/http"
@@ -20,12 +21,24 @@ func Create(c *gin.Context) {
 		return
 	}
 
+	// TODO: Validate if no morador with the cpf exists
 	if !utils.ValidateCPF(body.Cpf) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
 		return
 	}
 
-	// TODO: Validate apartamento_id
+	validApartment, queryErr := apartamentoService.Exists(body.Apartamento_id)
+
+	if queryErr != nil {
+		fmt.Println("Error querying apartment: ", queryErr)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+	}
+
+	if !validApartment {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Apartamento inválido"})
+		return
+	}
+
 	// TODO: Validate nome length
 	// TODO: Validate telefone
 
