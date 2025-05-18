@@ -3,7 +3,6 @@ package apartamentoController
 import (
 	apartmentModel "backend/models/apartamento"
 	"backend/schemas"
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -13,10 +12,7 @@ import (
 func Create(c *gin.Context) {
 	var body schemas.Apartamento
 
-	decoder := json.NewDecoder(c.Request.Body)
-	decoder.DisallowUnknownFields()
-
-	if err := decoder.Decode(&body); err != nil {
+	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Requisição Inválida"})
 		return
 	}

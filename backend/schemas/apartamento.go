@@ -3,8 +3,8 @@ package schemas
 import "github.com/google/uuid"
 
 type Apartamento struct {
-	Numero int    `json:"numero"`
-	Bloco  string `json:"bloco"`
+	Numero int    `json:"numero" binding:"required"`
+	Bloco  string `json:"bloco" binding:"required"`
 }
 
 type ApartamentoWithId struct {
