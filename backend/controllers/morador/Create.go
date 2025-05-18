@@ -39,7 +39,10 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	// TODO: Validate nome length
+	if len(body.Nome) > 100 {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "O nome do morador deve ter no máximo 100 digitos"})
+		return
+	}
 	// TODO: Validate telefone
 
 	err := moradorModel.Create(body)
