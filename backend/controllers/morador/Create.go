@@ -24,7 +24,9 @@ func Create(c *gin.Context) {
 	isValid, err := moradorService.Validate(body.Cpf)
 
 	if err != nil {
+		fmt.Println("Error validating CPF:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		return
 	}
 
 	if !isValid {
@@ -37,6 +39,7 @@ func Create(c *gin.Context) {
 	if queryErr != nil {
 		fmt.Println("Error querying apartment: ", queryErr)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		return
 	}
 
 	if !validApartment {
@@ -58,7 +61,7 @@ func Create(c *gin.Context) {
 	createErr := moradorModel.Create(body)
 
 	if createErr != nil {
-		fmt.Println("Error creating user: ", err.Error())
+		fmt.Println("Error creating user: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
 		return
 	}
