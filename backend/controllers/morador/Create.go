@@ -3,6 +3,7 @@ package moradorController
 import (
 	moradorModel "backend/models/morador"
 	"backend/schemas"
+	moradorService "backend/services/morador"
 	"fmt"
 	"net/http"
 
@@ -19,7 +20,13 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	// TODO: Validate cpf
+	validCpf := moradorService.ValidateCPF(body.Cpf)
+
+	if !validCpf {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
+		return
+	}
+
 	// TODO: Validate apartamento_id
 	// TODO: Validate nome length
 	// TODO: Validate telefone
