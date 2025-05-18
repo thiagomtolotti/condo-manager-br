@@ -3,6 +3,7 @@ package moradorController
 import (
 	moradorModel "backend/models/morador"
 	"backend/schemas"
+	apartamentoService "backend/services/apartamento"
 	"backend/utils"
 	"fmt"
 	"net/http"
@@ -25,9 +26,29 @@ func Patch(c *gin.Context) {
 		return
 	}
 
-	// TODO: Check if new apartamento_id exists
-	// TODO: Validate name size
-	// TODO: Validate phone size
+	exists, existsErr := apartamentoService.Exists(body.Apartamento_id)
+
+	if existsErr != nil {
+		fmt.Println("Error checking if apartamento exists:", existsErr)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		return
+	}
+
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Apartamento não existe"})
+		return
+	}
+
+	if len(body.Nome) > 100 {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "O nome do morador deve ter no máximo 100 digitos"})
+		return
+	}
+
+	// TODO: Validate if phone only has numbers, spaces and dashes (Regex)
+	if len(body.Telefone) > 15 {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "O telefone deve ter no máximo 15 digitos"})
+		return
+	}
 
 	err := moradorModel.Patch(cpf, body)
 
