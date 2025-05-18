@@ -4,7 +4,6 @@ import (
 	"backend/db"
 	"backend/utils"
 	"context"
-	"database/sql"
 )
 
 func Validate(cpf string) (bool, error) {
@@ -16,11 +15,11 @@ func Validate(cpf string) (bool, error) {
 	var exists int
 	err := db.Connection.QueryRow(context.Background(), query, cpf).Scan(&exists)
 
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return true, nil
-		}
+	if exists == 0 {
+		return true, nil
+	}
 
+	if err != nil {
 		return false, err
 	}
 
