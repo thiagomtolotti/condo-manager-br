@@ -3,7 +3,6 @@ package apartamentoService
 import (
 	"backend/db"
 	"context"
-	"database/sql"
 
 	"github.com/google/uuid"
 )
@@ -14,10 +13,11 @@ func Exists(id uuid.UUID) (bool, error) {
 	var exists int
 	err := db.Connection.QueryRow(context.Background(), query, id).Scan(&exists)
 
+	if exists == 0 {
+		return false, nil
+	}
+
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return false, nil
-		}
 		return false, err
 	}
 
