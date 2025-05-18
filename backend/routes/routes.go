@@ -22,6 +22,7 @@ func registerApartamentoRoutes(router *gin.Engine) {
 }
 
 func registerMoradorRoutes(router *gin.Engine) {
+	router.GET("/morador", moradorController.Get)
 	router.POST("/morador", moradorController.Create)
 	router.DELETE("/morador/:cpf", moradorController.Delete)
 }
