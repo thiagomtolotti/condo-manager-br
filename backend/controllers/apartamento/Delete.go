@@ -20,11 +20,16 @@ func Delete(c *gin.Context) {
 
 	parsedId, _ := uuid.Parse(id)
 
-	err := apartmentModel.Delete(parsedId)
+	success, err := apartmentModel.Delete(parsedId)
 
 	if err != nil {
 		fmt.Println("Error deleting apartment:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		return
+	}
+
+	if !success {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Id inválido"})
 		return
 	}
 
