@@ -39,6 +39,8 @@ func Post(c *gin.Context) {
 		return
 	}
 
+	// TODO: Check if vaga with given number exists
+
 	queryErr := vagaModel.Create(apartamento_id, body)
 
 	if queryErr != nil {
