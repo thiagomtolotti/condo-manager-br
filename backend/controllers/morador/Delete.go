@@ -17,11 +17,16 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	err := moradorModel.Delete(cpf)
+	success, err := moradorModel.Delete(cpf)
 
 	if err != nil {
 		fmt.Println("Error deleting morador: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		return
+	}
+
+	if !success {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
 		return
 	}
 
