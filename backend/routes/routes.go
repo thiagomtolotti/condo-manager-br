@@ -4,6 +4,7 @@ import (
 	"backend/controllers"
 	apartamentoController "backend/controllers/apartamento"
 	moradorController "backend/controllers/morador"
+	vagaController "backend/controllers/vaga"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +14,7 @@ func RegisterRoutes(router *gin.Engine) {
 
 	registerApartamentoRoutes(router)
 	registerMoradorRoutes(router)
+	registerVagaRoutes(router)
 }
 
 func registerApartamentoRoutes(router *gin.Engine) {
@@ -26,4 +28,8 @@ func registerMoradorRoutes(router *gin.Engine) {
 	router.POST("/morador", moradorController.Create)
 	router.PATCH("/morador/:cpf", moradorController.Patch)
 	router.DELETE("/morador/:cpf", moradorController.Delete)
+}
+
+func registerVagaRoutes(router *gin.Engine) {
+	router.POST("/vaga/:apartamento_id", vagaController.Post)
 }
