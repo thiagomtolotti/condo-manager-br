@@ -25,6 +25,6 @@ func Get(c *gin.Context) {
 		return
 	}
 
-	// TODO: Return the total count of apartments (for pagination in the FE)
+	// TODO: Return the total count of moradores (for pagination in the FE)
 	c.JSON(http.StatusOK, gin.H{"moradores": data})
 }

@@ -24,6 +24,6 @@ func Get(c *gin.Context) {
 		return
 	}
 
+	// TODO: Return the total count of parking spaces (for pagination in the FE)
 	c.JSON(http.StatusOK, gin.H{"vagas": vagas})
-
 }
