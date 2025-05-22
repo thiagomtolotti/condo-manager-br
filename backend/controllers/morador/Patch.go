@@ -4,7 +4,7 @@ import (
 	moradorModel "backend/models/morador"
 	"backend/schemas"
 	apartamentoService "backend/services/apartamento"
-	"backend/utils"
+	"backend/utils/cpf"
 	"fmt"
 	"net/http"
 
@@ -13,9 +13,11 @@ import (
 
 func Patch(c *gin.Context) {
 	var body schemas.MoradorWithoutCPF
-	cpf := c.Param("cpf")
+	try := c.Param("cpf")
 
-	if !utils.ValidateCPF(cpf) {
+	cpf, err := cpf.New(try)
+
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
 		return
 	}
@@ -26,10 +28,10 @@ func Patch(c *gin.Context) {
 		return
 	}
 
-	exists, existsErr := apartamentoService.Exists(body.Apartamento_id)
+	exists, err := apartamentoService.Exists(body.Apartamento_id)
 
-	if existsErr != nil {
-		fmt.Println("Error checking if apartamento exists:", existsErr)
+	if err != nil {
+		fmt.Println("Error checking if apartamento exists:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
 		return
 	}
@@ -50,7 +52,7 @@ func Patch(c *gin.Context) {
 		return
 	}
 
-	err := moradorModel.Patch(cpf, body)
+	err = moradorModel.Patch(cpf, body)
 
 	if err != nil {
 		fmt.Println("Error updating morador:", err)

@@ -2,10 +2,11 @@ package moradorModel
 
 import (
 	"backend/db"
+	"backend/utils/cpf"
 	"context"
 )
 
-func Delete(cpf string) (bool, error) {
+func Delete(cpf cpf.CPF) (bool, error) {
 	const query = `DELETE FROM moradores WHERE cpf=$1`
 
 	result, err := db.Connection.Exec(context.Background(), query, cpf)

@@ -2,7 +2,7 @@ package moradorController
 
 import (
 	moradorModel "backend/models/morador"
-	"backend/utils"
+	"backend/utils/cpf"
 	"fmt"
 	"net/http"
 
@@ -10,9 +10,10 @@ import (
 )
 
 func Delete(c *gin.Context) {
-	cpf := c.Param("cpf")
+	try := c.Param("cpf")
+	cpf, err := cpf.New(try)
 
-	if !utils.ValidateCPF(cpf) {
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
 		return
 	}

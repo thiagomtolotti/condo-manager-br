@@ -1,16 +1,38 @@
-package utils
+package cpf
 
 import (
+	"errors"
 	"strings"
 	"unicode"
 	"unicode/utf8"
 )
 
-// https://www.macoratti.net/alg_cpf.htm
-func ValidateCPF(cpf string) bool {
-	cpf = strings.ReplaceAll(cpf, ".", "")
-	cpf = strings.ReplaceAll(cpf, "-", "")
+type CPF struct {
+	value string
+}
 
+func New(s string) (CPF, error) {
+	clean := cleanCPF(s)
+
+	if !isValidCpf(clean) {
+		return CPF{}, ErrInvalidCPF
+	}
+
+	return CPF{value: clean}, nil
+}
+
+var ErrInvalidCPF = errors.New("Invalid cpf")
+
+func cleanCPF(s string) string {
+	// TODO: Use regex instead of ReplaceAll
+	s = strings.ReplaceAll(s, ".", "")
+	s = strings.ReplaceAll(s, "-", "")
+
+	return s
+}
+
+// https://www.macoratti.net/alg_cpf.htm
+func isValidCpf(cpf string) bool {
 	if len(cpf) != 11 {
 		return false
 	}

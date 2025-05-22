@@ -5,6 +5,7 @@ import (
 	"backend/schemas"
 	apartamentoService "backend/services/apartamento"
 	moradorService "backend/services/morador"
+	"backend/utils/cpf"
 	"fmt"
 	"net/http"
 
@@ -21,7 +22,13 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	isValid, err := moradorService.Validate(body.Cpf)
+	cpf, err := cpf.New(body.Cpf)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
+	}
+
+	isValid, err := moradorService.Validate(cpf)
 
 	if err != nil {
 		fmt.Println("Error validating CPF:", err)
@@ -34,10 +41,10 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	validApartment, queryErr := apartamentoService.Exists(body.Apartamento_id)
+	validApartment, err := apartamentoService.Exists(body.Apartamento_id)
 
-	if queryErr != nil {
-		fmt.Println("Error querying apartment: ", queryErr)
+	if err != nil {
+		fmt.Println("Error querying apartment: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
 		return
 	}
@@ -58,9 +65,9 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	createErr := moradorModel.Create(body)
+	err = moradorModel.Create(body)
 
-	if createErr != nil {
+	if err != nil {
 		fmt.Println("Error creating user: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
 		return

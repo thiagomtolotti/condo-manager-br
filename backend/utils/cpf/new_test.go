@@ -1,6 +1,9 @@
-package utils
+package cpf
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
 var validCpfs = []string{
 	"157.968.715-60",
@@ -174,16 +177,41 @@ var invalidCpfs = []string{
 	"abcdefghijklmnop",
 }
 
-func TestValidateCPF(t *testing.T) {
-	for _, cpf := range validCpfs {
-		if !ValidateCPF(cpf) {
-			t.Errorf("Wrong result for test case %v", cpf)
-		}
-	}
+func TestCPF(t *testing.T) {
+	t.Run("Valid CPFS", func(t *testing.T) {
+		for _, try := range validCpfs {
+			try := try
 
-	for _, cpf := range invalidCpfs {
-		if ValidateCPF(cpf) {
-			t.Errorf("Wrong result for test case %v", cpf)
+			t.Run("valid_"+try, func(t *testing.T) {
+				t.Parallel()
+
+				_, err := New(try)
+
+				if err != nil {
+					t.Errorf("expected valid CPF, got error :%v", err)
+				}
+			})
+
 		}
-	}
+	})
+
+	t.Run("invalid CPFs", func(t *testing.T) {
+		for _, try := range invalidCpfs {
+			try := try
+
+			t.Run("invalid_"+try, func(t *testing.T) {
+				t.Parallel()
+
+				cpf, err := New(try)
+
+				if cpf != (CPF{}) {
+					t.Errorf("expected nil CPF, got %v", cpf)
+				}
+
+				if errors.Is(err, ErrInvalidCPF) {
+					t.Errorf("expected %v, got  %v", err, ErrInvalidCPF)
+				}
+			})
+		}
+	})
 }

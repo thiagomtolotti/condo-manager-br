@@ -2,14 +2,11 @@ package moradorService
 
 import (
 	"backend/db"
-	"backend/utils"
+	"backend/utils/cpf"
 	"context"
 )
 
-func Validate(cpf string) (bool, error) {
-	if !utils.ValidateCPF(cpf) {
-		return false, nil
-	}
+func Validate(cpf cpf.CPF) (bool, error) {
 
 	const query = `SELECT 1 FROM moradores WHERE cpf=$1`
 	var exists int

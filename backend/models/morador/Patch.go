@@ -3,10 +3,11 @@ package moradorModel
 import (
 	"backend/db"
 	"backend/schemas"
+	"backend/utils/cpf"
 	"context"
 )
 
-func Patch(cpf string, data schemas.MoradorWithoutCPF) error {
+func Patch(cpf cpf.CPF, data schemas.MoradorWithoutCPF) error {
 	const query = `
         UPDATE moradores SET 
             apartamento_id = $1,
