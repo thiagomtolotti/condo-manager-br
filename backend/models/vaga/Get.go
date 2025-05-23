@@ -13,7 +13,7 @@ func Get(page int, pageSize int) ([]schemas.VagaWithApartment, error) {
 
 	query, err := utils.LoadSQL("vaga/list.sql")
 	if err != nil {
-		return []schemas.VagaWithApartment{}, fmt.Errorf("error reading list vagas sql: %v", err)
+		return []schemas.VagaWithApartment{}, fmt.Errorf("error reading list vagas sql: %w", err)
 	}
 
 	rows, err := db.Connection.Query(context.Background(), query, pageSize, offset)

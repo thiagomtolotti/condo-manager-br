@@ -12,7 +12,7 @@ import (
 func Delete(id uuid.UUID) (bool, error) {
 	query, err := utils.LoadSQL("vaga/delete.sql")
 	if err != nil {
-		return false, fmt.Errorf("error reading delete vaga sql: %v", err)
+		return false, fmt.Errorf("error reading delete vaga sql: %w", err)
 	}
 
 	result, err := db.Connection.Exec(context.Background(), query, id)

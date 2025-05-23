@@ -12,7 +12,7 @@ import (
 func Delete(id uuid.UUID) (bool, error) {
 	query, err := utils.LoadSQL("apartamento/delete.sql")
 	if err != nil {
-		return false, fmt.Errorf("error reading delete apartamento sql file: %v", err)
+		return false, fmt.Errorf("error reading delete apartamento sql file: %w", err)
 	}
 
 	result, err := db.Connection.Exec(context.Background(), query, id)

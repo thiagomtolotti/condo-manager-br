@@ -12,7 +12,7 @@ import (
 func Patch(cpf cpf.CPF, data schemas.MoradorWithoutCPF) error {
 	query, err := utils.LoadSQL("morador/patch.sql")
 	if err != nil {
-		return fmt.Errorf("error reading patch morador sql: %v", err)
+		return fmt.Errorf("error reading patch morador sql: %w", err)
 	}
 
 	_, err = db.Connection.Exec(

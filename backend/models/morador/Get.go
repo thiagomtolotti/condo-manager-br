@@ -13,7 +13,7 @@ func Get(page int, pageSize int) ([]schemas.Morador, error) {
 
 	query, err := utils.LoadSQL("morador/list.sql")
 	if err != nil {
-		return []schemas.Morador{}, fmt.Errorf("error reading list moradores sql: %v", err)
+		return []schemas.Morador{}, fmt.Errorf("error reading list moradores sql: %w", err)
 	}
 
 	rows, err := db.Connection.Query(context.Background(), query, pageSize, offset)

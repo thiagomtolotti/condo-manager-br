@@ -13,7 +13,7 @@ import (
 func Create(apartamento_id uuid.UUID, body schemas.Vaga) error {
 	query, err := utils.LoadSQL("vaga/create.sql")
 	if err != nil {
-		return fmt.Errorf("error reading create vaga sql: %v", err)
+		return fmt.Errorf("error reading create vaga sql: %w", err)
 	}
 
 	_, err = db.Connection.Exec(

@@ -11,7 +11,7 @@ import (
 func Delete(cpf cpf.CPF) (bool, error) {
 	query, err := utils.LoadSQL("morador/delete.sql")
 	if err != nil {
-		return false, fmt.Errorf("error reading delete morador sql file: %v", err)
+		return false, fmt.Errorf("error reading delete morador sql file: %w", err)
 	}
 
 	result, err := db.Connection.Exec(context.Background(), query, cpf)

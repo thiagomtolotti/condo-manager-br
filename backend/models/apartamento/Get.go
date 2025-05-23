@@ -13,7 +13,7 @@ func GetApartamento(page int, pageSize int) ([]schemas.ApartamentoWithId, error)
 
 	sql, err := utils.LoadSQL("apartamento/list.sql")
 	if err != nil {
-		return []schemas.ApartamentoWithId{}, fmt.Errorf("error reading list apartamentos sql file: %v", err)
+		return []schemas.ApartamentoWithId{}, fmt.Errorf("error reading list apartamentos sql file: %w", err)
 	}
 
 	rows, err := db.Connection.Query(context.Background(), sql, pageSize, offset)
