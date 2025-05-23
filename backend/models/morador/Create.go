@@ -9,10 +9,10 @@ import (
 )
 
 func Create(data schemas.Morador) error {
-	query, err := utils.LoadSQL("morador/create.go")
+	query, err := utils.LoadSQL("morador/create.sql")
 
 	if err != nil {
-		return fmt.Errorf("error reading create morador sql file %v", err)
+		return fmt.Errorf("error reading create morador sql file: %v", err)
 	}
 
 	_, err = db.Connection.Exec(
