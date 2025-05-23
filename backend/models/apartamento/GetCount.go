@@ -17,7 +17,7 @@ func GetCount() (int, error) {
 
 	err = db.Connection.QueryRow(context.Background(), query).Scan(&count)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("error querying apartamento count: %w", err)
 	}
 
 	return count, nil
