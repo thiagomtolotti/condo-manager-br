@@ -22,6 +22,8 @@ func Delete(c *gin.Context) {
 
 	success, err := apartmentModel.Delete(parsedId)
 
+	// TODO: Check if apartamento has moradores (if it has throws an error on deleting attempr)
+	// TODO: Check if apartamento has vagas (if it has throws an error on deleting attempr)
 	if err != nil {
 		fmt.Println("Error deleting apartment:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
