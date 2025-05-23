@@ -17,7 +17,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	err := apartmentModel.CreateApartamento(body)
+	id, err := apartmentModel.CreateApartamento(body)
 
 	if err != nil {
 		fmt.Println("Erro creating apartment: ", err)
@@ -27,6 +27,11 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	// TODO: Return id with the apartment created
-	c.JSON(http.StatusOK, gin.H{"message": "Apartamento criado com sucesso!"})
+	c.JSON(
+		http.StatusCreated,
+		gin.H{
+			"message": "Apartamento criado com sucesso!",
+			"id":      id,
+		},
+	)
 }

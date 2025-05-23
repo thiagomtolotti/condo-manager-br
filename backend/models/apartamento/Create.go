@@ -6,24 +6,28 @@ import (
 	"backend/utils"
 	"context"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
-func CreateApartamento(apartamento schemas.Apartamento) error {
+func CreateApartamento(apartamento schemas.Apartamento) (uuid.UUID, error) {
 	// TODO: Validate length of bloco in controller
 	if len(apartamento.Bloco) > 10 {
-		return fmt.Errorf("apartment block must be max 10 characters long")
+		return uuid.UUID{}, fmt.Errorf("apartment block must be max 10 characters long")
 	}
+
+	var id uuid.UUID
 
 	sql, err := utils.LoadSQL("apartamento/create.sql")
 	if err != nil {
-		return fmt.Errorf("error reading create apartamento sql file: %w", err)
+		return uuid.UUID{}, fmt.Errorf("error reading create apartamento sql file: %w", err)
 	}
 
-	_, err = db.Connection.Exec(context.Background(), sql, apartamento.Numero, apartamento.Bloco)
+	err = db.Connection.QueryRow(context.Background(), sql, apartamento.Numero, apartamento.Bloco).Scan(&id)
 
 	if err != nil {
-		return fmt.Errorf("failed to insert apartamento: %w", err)
+		return uuid.UUID{}, fmt.Errorf("failed to insert apartamento: %w", err)
 	}
 
-	return nil
+	return id, nil
 }

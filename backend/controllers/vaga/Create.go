@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func Post(c *gin.Context) {
+func Create(c *gin.Context) {
 	var body schemas.Vaga
 	id := c.Param("apartamento_id")
 	apartamento_id, err := uuid.Parse(id)
@@ -40,14 +40,19 @@ func Post(c *gin.Context) {
 	}
 
 	// TODO: Check if vaga with given number exists
+	vagaId, err := vagaModel.Create(apartamento_id, body)
 
-	queryErr := vagaModel.Create(apartamento_id, body)
-
-	if queryErr != nil {
-		fmt.Println("Error creating parking space:", queryErr)
+	if err != nil {
+		fmt.Println("Error creating parking space:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Vaga criada com sucesso"})
+	c.JSON(
+		http.StatusCreated,
+		gin.H{
+			"message": "Vaga criada com sucesso",
+			"id":      vagaId,
+		},
+	)
 }

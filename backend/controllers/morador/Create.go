@@ -73,6 +73,5 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	// TODO: Return resident id
 	c.JSON(http.StatusCreated, gin.H{"message": "Morador criado com sucesso"})
 }
