@@ -1,0 +1,1 @@
+DELETE FROM vagas WHERE id = $1

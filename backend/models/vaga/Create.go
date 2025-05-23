@@ -3,18 +3,20 @@ package vagaModel
 import (
 	"backend/db"
 	"backend/schemas"
+	"backend/utils"
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 )
 
 func Create(apartamento_id uuid.UUID, body schemas.Vaga) error {
-	const query = `
-        INSERT INTO vagas (
-            apartamento_id, numero
-        ) VALUES ($1, $2)`
+	query, err := utils.LoadSQL("vaga/create.sql")
+	if err != nil {
+		return fmt.Errorf("error reading create vaga sql: %v", err)
+	}
 
-	_, err := db.Connection.Exec(
+	_, err = db.Connection.Exec(
 		context.Background(),
 		query,
 		apartamento_id,

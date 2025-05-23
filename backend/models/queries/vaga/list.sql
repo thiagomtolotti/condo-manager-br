@@ -1,0 +1,1 @@
+SELECT * FROM vagas LIMIT $1 OFFSET $2

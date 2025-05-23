@@ -3,13 +3,18 @@ package vagaModel
 import (
 	"backend/db"
 	"backend/schemas"
+	"backend/utils"
 	"context"
+	"fmt"
 )
 
 func Get(page int, pageSize int) ([]schemas.VagaWithApartment, error) {
 	offset := (page - 1) * pageSize
 
-	const query = `SELECT * FROM vagas LIMIT $1 OFFSET $2`
+	query, err := utils.LoadSQL("vaga/list.sql")
+	if err != nil {
+		return []schemas.VagaWithApartment{}, fmt.Errorf("error reading list vagas sql: %v", err)
+	}
 
 	rows, err := db.Connection.Query(context.Background(), query, pageSize, offset)
 
