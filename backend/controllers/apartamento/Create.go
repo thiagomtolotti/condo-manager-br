@@ -27,8 +27,11 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Apartamento criado com sucesso!",
-		"id":      id,
-	})
+	c.JSON(
+		http.StatusCreated,
+		gin.H{
+			"message": "Apartamento criado com sucesso!",
+			"id":      id,
+		},
+	)
 }
