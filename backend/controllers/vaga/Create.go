@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func Post(c *gin.Context) {
+func Create(c *gin.Context) {
 	var body schemas.Vaga
 	id := c.Param("apartamento_id")
 	apartamento_id, err := uuid.Parse(id)

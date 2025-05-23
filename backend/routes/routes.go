@@ -32,6 +32,6 @@ func registerMoradorRoutes(router *gin.Engine) {
 
 func registerVagaRoutes(router *gin.Engine) {
 	router.GET("/vaga", vagaController.Get)
-	router.POST("/vaga/:apartamento_id", vagaController.Post)
+	router.POST("/vaga/:apartamento_id", vagaController.Create)
 	router.DELETE("/vaga/:id", vagaController.Delete)
 }
