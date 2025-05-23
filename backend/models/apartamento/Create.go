@@ -9,7 +9,7 @@ import (
 )
 
 func CreateApartamento(apartamento schemas.Apartamento) error {
-	// TODO: Validate length of blobo in controller
+	// TODO: Validate length of bloco in controller
 	if len(apartamento.Bloco) > 10 {
 		return fmt.Errorf("apartment block must be max 10 characters long")
 	}
