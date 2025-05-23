@@ -40,14 +40,20 @@ func Create(c *gin.Context) {
 	}
 
 	// TODO: Check if vaga with given number exists
+	// TODO: Should validate id before returning? (in controller or model?)
+	uuid, err := vagaModel.Create(apartamento_id, body)
 
-	queryErr := vagaModel.Create(apartamento_id, body)
-
-	if queryErr != nil {
-		fmt.Println("Error creating parking space:", queryErr)
+	if err != nil {
+		fmt.Println("Error creating parking space:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Vaga criada com sucesso"})
+	c.JSON(
+		http.StatusCreated,
+		gin.H{
+			"message": "Vaga criada com sucesso",
+			"id":      uuid,
+		},
+	)
 }
