@@ -3,13 +3,18 @@ package moradorModel
 import (
 	"backend/db"
 	"backend/schemas"
+	"backend/utils"
 	"context"
+	"fmt"
 )
 
 func Get(page int, pageSize int) ([]schemas.Morador, error) {
 	offset := (page - 1) * pageSize
 
-	const query = `SELECT * FROM moradores LIMIT $1 OFFSET $2`
+	query, err := utils.LoadSQL("morador/list.sql")
+	if err != nil {
+		return []schemas.Morador{}, fmt.Errorf("error reading list moradores sql: %v", err)
+	}
 
 	rows, err := db.Connection.Query(context.Background(), query, pageSize, offset)
 

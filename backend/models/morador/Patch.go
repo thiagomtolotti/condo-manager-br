@@ -3,21 +3,19 @@ package moradorModel
 import (
 	"backend/db"
 	"backend/schemas"
+	"backend/utils"
 	"backend/utils/cpf"
 	"context"
+	"fmt"
 )
 
 func Patch(cpf cpf.CPF, data schemas.MoradorWithoutCPF) error {
-	const query = `
-        UPDATE moradores SET 
-            apartamento_id = $1,
-            nome = $2,
-            telefone = $3,
-            responsavel = $4,
-            proprietario = $5
-        WHERE cpf = $6`
+	query, err := utils.LoadSQL("morador/patch.sql")
+	if err != nil {
+		return fmt.Errorf("error reading patch morador sql: %v", err)
+	}
 
-	_, err := db.Connection.Exec(
+	_, err = db.Connection.Exec(
 		context.Background(),
 		query,
 		data.Apartamento_id,
