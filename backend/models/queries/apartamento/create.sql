@@ -1,0 +1,1 @@
+INSERT INTO apartamentos (numero, bloco) VALUES ($1 $2)

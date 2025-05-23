@@ -3,13 +3,18 @@ package apartmentModel
 import (
 	"backend/db"
 	"backend/schemas"
+	"backend/utils"
 	"context"
+	"fmt"
 )
 
 func GetApartamento(page int, pageSize int) ([]schemas.ApartamentoWithId, error) {
 	offset := (page - 1) * pageSize
 
-	sql := `SELECT * FROM apartamentos LIMIT $1 OFFSET $2 `
+	sql, err := utils.LoadSQL("apartamento/list.sql")
+	if err != nil {
+		return []schemas.ApartamentoWithId{}, fmt.Errorf("error reading list apartamentos sql file: %v", err)
+	}
 
 	rows, err := db.Connection.Query(context.Background(), sql, pageSize, offset)
 
