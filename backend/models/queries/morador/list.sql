@@ -1,0 +1,1 @@
+SELECT * FROM moradores LIMIT $1 OFFSET $2

@@ -3,17 +3,19 @@ package moradorModel
 import (
 	"backend/db"
 	"backend/schemas"
+	"backend/utils"
 	"context"
+	"fmt"
 )
 
 func Create(data schemas.Morador) error {
-	const query = `
-        INSERT INTO moradores (
-            cpf, apartamento_id, nome, 
-            telefone, responsavel, proprietario
-        ) VALUES ($1, $2, $3, $4, $5, $6)`
+	query, err := utils.LoadSQL("morador/create.sql")
 
-	_, err := db.Connection.Exec(
+	if err != nil {
+		return fmt.Errorf("error reading create morador sql file: %w", err)
+	}
+
+	_, err = db.Connection.Exec(
 		context.Background(),
 		query,
 		data.Cpf,

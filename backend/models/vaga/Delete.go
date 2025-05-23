@@ -2,13 +2,18 @@ package vagaModel
 
 import (
 	"backend/db"
+	"backend/utils"
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 )
 
 func Delete(id uuid.UUID) (bool, error) {
-	const query = `DELETE FROM vagas WHERE id = $1`
+	query, err := utils.LoadSQL("vaga/delete.sql")
+	if err != nil {
+		return false, fmt.Errorf("error reading delete vaga sql: %w", err)
+	}
 
 	result, err := db.Connection.Exec(context.Background(), query, id)
 
