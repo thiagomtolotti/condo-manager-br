@@ -1,7 +1,7 @@
 package apartamentoController
 
 import (
-	apartmentModel "backend/models/apartamento"
+	apartamentoModel "backend/models/apartamento"
 	"backend/utils"
 	"fmt"
 	"net/http"
@@ -20,7 +20,7 @@ func Delete(c *gin.Context) {
 
 	parsedId, _ := uuid.Parse(id)
 
-	success, err := apartmentModel.Delete(parsedId)
+	success, err := apartamentoModel.Delete(parsedId)
 
 	// TODO: Check if apartamento has moradores (if it has throws an error on deleting)
 	// TODO: Check if apartamento has vagas (if it has throws an error on deleting)

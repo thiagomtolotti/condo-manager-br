@@ -16,14 +16,26 @@ func Get(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Parâmetros inválidos"})
 	}
 
-	vagas, queryErr := vagaModel.Get(data.Page, data.PageSize)
+	vagas, err := vagaModel.Get(data.Page, data.PageSize)
 
-	if queryErr != nil {
-		fmt.Println("Error fetching vagas:", queryErr)
+	if err != nil {
+		fmt.Println("Error fetching vagas:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
 		return
 	}
 
-	// TODO: Return the total count of parking spaces (for pagination in the FE)
-	c.JSON(http.StatusOK, gin.H{"vagas": vagas})
+	count, err := vagaModel.GetCount()
+	if err != nil {
+		fmt.Println("Error fetching vagas count:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		return
+	}
+
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"vagas":       vagas,
+			"total_count": count,
+		},
+	)
 }
