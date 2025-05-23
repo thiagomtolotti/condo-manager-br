@@ -17,14 +17,27 @@ func Get(c *gin.Context) {
 		return
 	}
 
-	rows, fetchErr := apartmentModel.GetApartamento(params.Page, params.PageSize)
+	rows, err := apartmentModel.GetApartamento(params.Page, params.PageSize)
 
-	if fetchErr != nil {
-		fmt.Println("Error fetching apartment: ", fetchErr)
+	if err != nil {
+		fmt.Println("Error fetching apartment: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
 		return
 	}
 
-	// TODO: Return the total count of apartments (for pagination in the FE)
-	c.JSON(http.StatusOK, gin.H{"apartamentos": rows})
+	total, err := apartmentModel.GetCount()
+
+	if err != nil {
+		fmt.Println("Error fetching apartment count:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		return
+	}
+
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"apartamentos": rows,
+			"total_count":  total,
+		},
+	)
 }
