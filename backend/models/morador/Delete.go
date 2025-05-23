@@ -14,7 +14,7 @@ func Delete(cpf cpf.CPF) (bool, error) {
 		return false, fmt.Errorf("error reading delete morador sql file: %w", err)
 	}
 
-	result, err := db.Connection.Exec(context.Background(), query, cpf)
+	result, err := db.Connection.Exec(context.Background(), query, cpf.Value)
 
 	if err != nil {
 		return false, err

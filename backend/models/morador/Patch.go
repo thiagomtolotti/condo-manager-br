@@ -23,7 +23,7 @@ func Patch(cpf cpf.CPF, data schemas.MoradorWithoutCPF) error {
 		data.Telefone,
 		data.Responsavel,
 		data.Proprietario,
-		cpf,
+		cpf.Value,
 	)
 
 	if err != nil {
