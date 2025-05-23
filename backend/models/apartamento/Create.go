@@ -16,7 +16,7 @@ func CreateApartamento(apartamento schemas.Apartamento) error {
 
 	sql, err := utils.LoadSQL("apartamento/create.sql")
 	if err != nil {
-		return fmt.Errorf("error reading create apartamento sql file :%v", err)
+		return fmt.Errorf("error reading create apartamento sql file: %v", err)
 	}
 
 	_, err = db.Connection.Exec(context.Background(), sql, apartamento.Numero, apartamento.Bloco)
