@@ -1,7 +1,7 @@
 package apartamentoController
 
 import (
-	apartmentModel "backend/models/apartamento"
+	apartamentoModel "backend/models/apartamento"
 	"backend/utils"
 	"fmt"
 	"net/http"
@@ -17,7 +17,7 @@ func Get(c *gin.Context) {
 		return
 	}
 
-	rows, err := apartmentModel.GetApartamento(params.Page, params.PageSize)
+	rows, err := apartamentoModel.GetApartamento(params.Page, params.PageSize)
 
 	if err != nil {
 		fmt.Println("Error fetching apartment: ", err)
@@ -25,7 +25,7 @@ func Get(c *gin.Context) {
 		return
 	}
 
-	total, err := apartmentModel.GetCount()
+	total, err := apartamentoModel.GetCount()
 
 	if err != nil {
 		fmt.Println("Error fetching apartment count:", err)

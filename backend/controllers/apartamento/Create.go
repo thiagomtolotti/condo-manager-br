@@ -1,7 +1,7 @@
 package apartamentoController
 
 import (
-	apartmentModel "backend/models/apartamento"
+	apartamentoModel "backend/models/apartamento"
 	"backend/schemas"
 	"fmt"
 	"net/http"
@@ -17,7 +17,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	id, err := apartmentModel.CreateApartamento(body)
+	id, err := apartamentoModel.CreateApartamento(body)
 
 	if err != nil {
 		fmt.Println("Erro creating apartment: ", err)
