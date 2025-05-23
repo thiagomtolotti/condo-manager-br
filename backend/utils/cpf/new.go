@@ -8,7 +8,7 @@ import (
 )
 
 type CPF struct {
-	value string
+	Value string
 }
 
 func New(s string) (CPF, error) {
@@ -18,7 +18,7 @@ func New(s string) (CPF, error) {
 		return CPF{}, ErrInvalidCPF
 	}
 
-	return CPF{value: clean}, nil
+	return CPF{Value: clean}, nil
 }
 
 var ErrInvalidCPF = errors.New("Invalid cpf")
