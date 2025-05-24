@@ -1,9 +1,9 @@
 package apartamentoController
 
 import (
+	"backend/errs"
 	apartamentoModel "backend/models/apartamento"
-	"backend/utils"
-	"fmt"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,27 +11,27 @@ import (
 )
 
 func Delete(c *gin.Context) {
-	id := c.Param("id")
+	tryId := c.Param("id")
 
-	if !utils.ValidateId(id) {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "É necessário fornecer um id válido"})
+	id, err := uuid.Parse(tryId)
+
+	if err != nil {
+		errs.BadRequestError(c, "id inválido")
 		return
 	}
-
-	parsedId, _ := uuid.Parse(id)
-
-	success, err := apartamentoModel.Delete(parsedId)
 
 	// TODO: Check if apartamento has moradores (if it has throws an error on deleting)
 	// TODO: Check if apartamento has vagas (if it has throws an error on deleting)
-	if err != nil {
-		fmt.Println("Error deleting apartment:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
-		return
-	}
 
-	if !success {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Id inválido"})
+	err = apartamentoModel.Delete(id)
+
+	if err != nil {
+		if errors.Is(err, apartamentoModel.ErrNotFound) {
+			errs.BadRequestError(c, "id inválido")
+			return
+		}
+
+		errs.InternalServerError(c, err)
 		return
 	}
 

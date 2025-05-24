@@ -1,9 +1,9 @@
 package vagaController
 
 import (
+	"backend/errs"
 	vagaModel "backend/models/vaga"
 	"backend/utils"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,21 +13,19 @@ func Get(c *gin.Context) {
 	data, err := utils.ValidatePagination(c)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Parâmetros inválidos"})
+		errs.BadRequestError(c, "Parâmetros inválidos")
+		return
 	}
 
 	vagas, err := vagaModel.Get(data.Page, data.PageSize)
-
 	if err != nil {
-		fmt.Println("Error fetching vagas:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		errs.InternalServerError(c, err)
 		return
 	}
 
 	count, err := vagaModel.GetCount()
 	if err != nil {
-		fmt.Println("Error fetching vagas count:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		errs.InternalServerError(c, err)
 		return
 	}
 

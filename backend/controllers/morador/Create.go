@@ -1,12 +1,12 @@
 package moradorController
 
 import (
+	"backend/errs"
 	moradorModel "backend/models/morador"
 	"backend/schemas"
 	apartamentoService "backend/services/apartamento"
 	moradorService "backend/services/morador"
 	"backend/utils/cpf"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,22 +17,19 @@ func Create(c *gin.Context) {
 
 	// TODO: Validate requests body on middleware
 	if err := c.ShouldBindJSON(&body); err != nil {
-		fmt.Println(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Campos Inválidos"})
+		errs.BadRequestError(c, "Campos inválidos")
 		return
 	}
 
 	cpf, err := cpf.New(body.Cpf)
-
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
+		errs.BadRequestError(c, "CPF inválido")
+		return
 	}
 
 	isValid, err := moradorService.Validate(cpf)
-
 	if err != nil {
-		fmt.Println("Error validating CPF:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		errs.InternalServerError(c, err)
 		return
 	}
 
@@ -42,36 +39,38 @@ func Create(c *gin.Context) {
 	}
 
 	validApartment, err := apartamentoService.Exists(body.Apartamento_id)
-
 	if err != nil {
-		fmt.Println("Error querying apartment: ", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		errs.InternalServerError(c, err)
 		return
 	}
 
 	if !validApartment {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Apartamento inválido"})
+		errs.BadRequestError(c, "Apartamento inválido")
 		return
 	}
 
 	if len(body.Nome) > 100 {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "O nome do morador deve ter no máximo 100 digitos"})
+		errs.BadRequestError(c, "O nome do morador deve ter no máximo 100 digitos")
 		return
 	}
 
 	// TODO: Validate if phone only has numbers, spaces and dashes (Regex)
 	if len(body.Telefone) > 15 {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "O telefone deve ter no máximo 15 digitos"})
+		errs.BadRequestError(c, "O telefone deve ter no máximo 15 digitos")
 		return
 	}
 
 	err = moradorModel.Create(body)
 
 	if err != nil {
-		fmt.Println("Error creating user: ", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		errs.InternalServerError(c, err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Morador criado com sucesso"})
+	c.JSON(
+		http.StatusCreated,
+		gin.H{
+			"message": "Morador criado com sucesso",
+		},
+	)
 }

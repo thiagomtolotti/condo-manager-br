@@ -8,6 +8,7 @@ import (
 )
 
 func Exists(id uuid.UUID) (bool, error) {
+	// TODO: Should be in model
 	const query = `SELECT 1 FROM apartamentos WHERE id=$1`
 
 	var exists int

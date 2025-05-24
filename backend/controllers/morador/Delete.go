@@ -1,9 +1,9 @@
 package moradorController
 
 import (
+	"backend/errs"
 	moradorModel "backend/models/morador"
 	"backend/utils/cpf"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,22 +14,25 @@ func Delete(c *gin.Context) {
 	cpf, err := cpf.New(try)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
+		errs.BadRequestError(c, "CPF inválido")
 		return
 	}
 
 	success, err := moradorModel.Delete(cpf)
-
 	if err != nil {
-		fmt.Println("Error deleting morador: ", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		errs.InternalServerError(c, err)
 		return
 	}
 
 	if !success {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
+		errs.BadRequestError(c, "CPF inválido")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Morador excluído com sucesso"})
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"message": "Morador excluído com sucesso",
+		},
+	)
 }

@@ -1,10 +1,10 @@
 package vagaController
 
 import (
+	"backend/errs"
 	vagaModel "backend/models/vaga"
 	"backend/schemas"
 	apartamentoService "backend/services/apartamento"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,38 +13,35 @@ import (
 
 func Create(c *gin.Context) {
 	var body schemas.Vaga
-	id := c.Param("apartamento_id")
-	apartamento_id, err := uuid.Parse(id)
+	tryId := c.Param("apartamento_id")
 
+	id, err := uuid.Parse(tryId)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Apartamento inválido"})
+		errs.BadRequestError(c, "id inválido")
 		return
 	}
 
 	if err := c.ShouldBindBodyWithJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Requisição inválida"})
+		errs.BadRequestError(c, "Campos inválidos")
 		return
 	}
 
-	exists, apid_error := apartamentoService.Exists(apartamento_id)
-
-	if apid_error != nil {
-		fmt.Println("Error checking if apartment exists: ", apid_error)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+	exists, err := apartamentoService.Exists(id)
+	if err != nil {
+		errs.InternalServerError(c, err)
 		return
 	}
 
 	if !exists {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Apartamento inválido"})
+		errs.BadRequestError(c, "Não existe apartamento com esse id")
 		return
 	}
 
 	// TODO: Check if vaga with given number exists
-	vagaId, err := vagaModel.Create(apartamento_id, body)
+	vagaId, err := vagaModel.Create(id, body)
 
 	if err != nil {
-		fmt.Println("Error creating parking space:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		errs.InternalServerError(c, err)
 		return
 	}
 

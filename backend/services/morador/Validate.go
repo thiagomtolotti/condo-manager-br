@@ -7,7 +7,7 @@ import (
 )
 
 func Validate(cpf cpf.CPF) (bool, error) {
-
+	// TODO: Should be in model
 	const query = `SELECT 1 FROM moradores WHERE cpf=$1`
 	var exists int
 	err := db.Connection.QueryRow(context.Background(), query, cpf).Scan(&exists)
