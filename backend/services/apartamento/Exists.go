@@ -10,6 +10,7 @@ import (
 )
 
 func Exists(id uuid.UUID) *errs.AppError {
+	// TODO: Remove query from service
 	const query = `SELECT 1 FROM apartamentos WHERE id=$1`
 
 	var exists int
