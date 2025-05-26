@@ -20,8 +20,8 @@ func (err *AppError) Error() string {
 
 func HandleError(c *gin.Context, err *AppError) {
 	if err.Code >= http.StatusInternalServerError {
-		if err.Error != nil {
-			log.Printf("Internal Error: %v\n", err.Error)
+		if err != nil {
+			log.Printf("Internal Error: %v\n", err.Error())
 		} else {
 			log.Println("No error provided")
 		}
@@ -42,7 +42,7 @@ func Unexpected(err error) *AppError {
 
 func BadRequest(message string, err error) *AppError {
 	return &AppError{
-		Code:    http.StatusInternalServerError,
+		Code:    http.StatusBadRequest,
 		Message: message,
 		Err:     err,
 	}
