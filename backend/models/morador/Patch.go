@@ -2,6 +2,7 @@ package moradorModel
 
 import (
 	"backend/db"
+	"backend/errs"
 	"backend/schemas"
 	"backend/utils"
 	"backend/utils/cpf"
@@ -9,10 +10,10 @@ import (
 	"fmt"
 )
 
-func Patch(cpf cpf.CPF, data schemas.MoradorWithoutCPF) error {
+func Patch(cpf cpf.CPF, data schemas.MoradorWithoutCPF) *errs.AppError {
 	query, err := utils.LoadSQL("morador/patch.sql")
 	if err != nil {
-		return fmt.Errorf("error reading patch morador sql: %w", err)
+		return errs.Unexpected(fmt.Errorf("reading update morador SQL file: %w", err))
 	}
 
 	_, err = db.Connection.Exec(
@@ -25,10 +26,9 @@ func Patch(cpf cpf.CPF, data schemas.MoradorWithoutCPF) error {
 		data.Proprietario,
 		cpf.Value,
 	)
-
 	if err != nil {
-		return err
+		return errs.Unexpected(fmt.Errorf("updating morador: %w", err))
 	}
 
-	return err
+	return nil
 }
