@@ -2,6 +2,7 @@ package vagaModel
 
 import (
 	"backend/db"
+	"backend/errs"
 	"backend/utils"
 	"context"
 	"fmt"
@@ -9,17 +10,20 @@ import (
 	"github.com/google/uuid"
 )
 
-func Delete(id uuid.UUID) (bool, error) {
+func Delete(id uuid.UUID) *errs.AppError {
 	query, err := utils.LoadSQL("vaga/delete.sql")
 	if err != nil {
-		return false, fmt.Errorf("error reading delete vaga sql: %w", err)
+		return errs.Unexpected(fmt.Errorf("reading delete vaga SQL file: %w", err))
 	}
 
 	result, err := db.Connection.Exec(context.Background(), query, id)
-
 	if err != nil {
-		return false, err
+		return errs.Unexpected(fmt.Errorf("deleting vaga in DB %w", err))
 	}
 
-	return result.RowsAffected() != 0, nil
+	if result.RowsAffected() == 0 {
+		return errs.BadRequest("nenhuma vaga com o id encontrada", nil)
+	}
+
+	return nil
 }
