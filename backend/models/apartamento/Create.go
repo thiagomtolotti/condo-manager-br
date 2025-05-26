@@ -2,6 +2,7 @@ package apartmentoModel
 
 import (
 	"backend/db"
+	"backend/errs"
 	"backend/schemas"
 	"backend/utils"
 	"context"
@@ -10,23 +11,25 @@ import (
 	"github.com/google/uuid"
 )
 
-func CreateApartamento(apartamento schemas.Apartamento) (uuid.UUID, error) {
+func CreateApartamento(apartamento schemas.Apartamento) (uuid.UUID, *errs.AppError) {
 	// TODO: Validate length of bloco in controller
 	if len(apartamento.Bloco) > 10 {
-		return uuid.UUID{}, fmt.Errorf("apartment block must be max 10 characters long")
+		var err = errs.BadRequest("Apartamento block must be max 10 characters long", nil)
+		return uuid.UUID{}, err
 	}
 
 	var id uuid.UUID
 
 	sql, err := utils.LoadSQL("apartamento/create.sql")
 	if err != nil {
-		return uuid.UUID{}, fmt.Errorf("error reading create apartamento sql file: %w", err)
+		err = fmt.Errorf("loading create apartamento SQL file: %w", err)
+		return uuid.UUID{}, errs.Unexpected(err)
 	}
 
 	err = db.Connection.QueryRow(context.Background(), sql, apartamento.Numero, apartamento.Bloco).Scan(&id)
-
 	if err != nil {
-		return uuid.UUID{}, fmt.Errorf("failed to insert apartamento: %w", err)
+		err = fmt.Errorf("Inserting new apartamento: %w", err)
+		return uuid.UUID{}, errs.Unexpected(err)
 	}
 
 	return id, nil
