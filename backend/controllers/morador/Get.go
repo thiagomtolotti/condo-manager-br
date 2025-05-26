@@ -1,6 +1,7 @@
 package moradorController
 
 import (
+	"backend/errs"
 	moradorModel "backend/models/morador"
 	"backend/utils"
 	"fmt"
@@ -11,14 +12,12 @@ import (
 
 func Get(c *gin.Context) {
 	params, err := utils.ValidatePagination(c)
-
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		errs.HandleError(c, err)
 		return
 	}
 
 	data, err := moradorModel.Get(params.Page, params.PageSize)
-
 	if err != nil {
 		fmt.Println("Error fetching morador: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
