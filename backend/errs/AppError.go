@@ -1,6 +1,7 @@
 package errs
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -10,7 +11,11 @@ import (
 type AppError struct {
 	Code    int
 	Message string
-	Error   error
+	Err     error
+}
+
+func (err *AppError) Error() string {
+	return fmt.Sprintf("%s: %v", err.Message, err.Err)
 }
 
 func HandleError(c *gin.Context, err *AppError) {
@@ -31,7 +36,7 @@ func Unexpected(err error) *AppError {
 	return &AppError{
 		Code:    http.StatusInternalServerError,
 		Message: "Internal Server Error",
-		Error:   err,
+		Err:     err,
 	}
 }
 
@@ -39,6 +44,6 @@ func BadRequest(message string, err error) *AppError {
 	return &AppError{
 		Code:    http.StatusInternalServerError,
 		Message: message,
-		Error:   err,
+		Err:     err,
 	}
 }
