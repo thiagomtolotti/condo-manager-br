@@ -31,8 +31,8 @@ func Create(c *gin.Context) {
 		errs.HandleError(c, appErr)
 		return
 	}
-	if morador == nil {
-		errs.HandleError(c, errs.BadRequest("Não há morador com este id", nil))
+	if morador != nil {
+		errs.HandleError(c, errs.BadRequest("Já existe um morador com este id", nil))
 		return
 	}
 
