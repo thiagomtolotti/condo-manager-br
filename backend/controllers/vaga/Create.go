@@ -5,7 +5,6 @@ import (
 	apartmentoModel "backend/models/apartamento"
 	vagaModel "backend/models/vaga"
 	"backend/schemas"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -37,10 +36,9 @@ func Create(c *gin.Context) {
 	}
 
 	// TODO: Check if vaga with given number exists
-	vagaId, err := vagaModel.Create(apartamento_id, body)
-	if err != nil {
-		fmt.Println("Error creating parking space:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+	vagaId, appErr := vagaModel.Create(apartamento_id, body)
+	if appErr != nil {
+		errs.HandleError(c, appErr)
 		return
 	}
 
