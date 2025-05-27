@@ -16,7 +16,7 @@ func Delete(id uuid.UUID) *errs.AppError {
 		return errs.Unexpected(fmt.Errorf("reading delete vaga SQL file: %w", err))
 	}
 
-	result, err := db.Connection.Exec(context.Background(), query, id)
+	result, err := db.Connection.Exec(context.Background(), query, id.String())
 	if err != nil {
 		return errs.Unexpected(fmt.Errorf("deleting vaga in DB %w", err))
 	}
