@@ -7,7 +7,6 @@ import (
 	apartamentoService "backend/services/apartamento"
 	moradorService "backend/services/morador"
 	"backend/utils/cpf"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -52,9 +51,8 @@ func Create(c *gin.Context) {
 	}
 
 	appErr = moradorModel.Create(body)
-	if err != nil {
-		fmt.Println("Error creating user: ", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+	if appErr != nil {
+		errs.HandleError(c, appErr)
 		return
 	}
 
