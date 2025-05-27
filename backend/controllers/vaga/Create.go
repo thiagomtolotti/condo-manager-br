@@ -2,9 +2,9 @@ package vagaController
 
 import (
 	"backend/errs"
+	apartmentoModel "backend/models/apartamento"
 	vagaModel "backend/models/vaga"
 	"backend/schemas"
-	apartamentoService "backend/services/apartamento"
 	"fmt"
 	"net/http"
 
@@ -26,9 +26,13 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	appErr := apartamentoService.Exists(apartamento_id)
+	apartamento, appErr := apartmentoModel.FindById(apartamento_id)
 	if appErr != nil {
 		errs.HandleError(c, appErr)
+		return
+	}
+	if apartamento == nil {
+		errs.HandleError(c, errs.BadRequest("Não há apartamento com o id fornecido", nil))
 		return
 	}
 

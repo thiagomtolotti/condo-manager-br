@@ -2,9 +2,9 @@ package moradorController
 
 import (
 	"backend/errs"
+	apartmentoModel "backend/models/apartamento"
 	moradorModel "backend/models/morador"
 	"backend/schemas"
-	apartamentoService "backend/services/apartamento"
 	"backend/utils/cpf"
 	"fmt"
 	"net/http"
@@ -27,9 +27,13 @@ func Patch(c *gin.Context) {
 		return
 	}
 
-	appErr := apartamentoService.Exists(body.Apartamento_id)
+	apartamento, appErr := apartmentoModel.FindById(body.Apartamento_id)
 	if appErr != nil {
 		errs.HandleError(c, appErr)
+		return
+	}
+	if apartamento == nil {
+		errs.HandleError(c, errs.BadRequest("Não há apartamento com o id fornecido", nil))
 		return
 	}
 
