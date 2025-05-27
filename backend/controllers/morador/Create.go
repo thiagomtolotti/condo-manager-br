@@ -5,7 +5,6 @@ import (
 	apartmentoModel "backend/models/apartamento"
 	moradorModel "backend/models/morador"
 	"backend/schemas"
-	moradorService "backend/services/morador"
 	"backend/utils/cpf"
 	"net/http"
 
@@ -27,9 +26,13 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	appErr := moradorService.Validate(cpf)
+	morador, appErr := moradorModel.FindByCPF(cpf)
 	if appErr != nil {
 		errs.HandleError(c, appErr)
+		return
+	}
+	if morador == nil {
+		errs.HandleError(c, errs.BadRequest("Não há morador com este id", nil))
 		return
 	}
 
