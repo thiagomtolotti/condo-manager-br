@@ -1,1 +1,1 @@
-SELECT 1 FROM moradores WHERE cpf=$1
+SELECT * FROM moradores WHERE cpf=$1

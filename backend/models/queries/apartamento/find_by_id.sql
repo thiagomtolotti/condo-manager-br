@@ -1,1 +1,1 @@
-SELECT 1 FROM apartamentos WHERE id=$1
+SELECT * FROM apartamentos WHERE id=$1
