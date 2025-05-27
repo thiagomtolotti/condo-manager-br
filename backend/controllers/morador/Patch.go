@@ -1,9 +1,10 @@
 package moradorController
 
 import (
+	"backend/errs"
+	apartmentoModel "backend/models/apartamento"
 	moradorModel "backend/models/morador"
 	"backend/schemas"
-	apartamentoService "backend/services/apartamento"
 	"backend/utils/cpf"
 	"fmt"
 	"net/http"
@@ -14,46 +15,40 @@ import (
 func Patch(c *gin.Context) {
 	var body schemas.MoradorWithoutCPF
 	try := c.Param("cpf")
-
 	cpf, err := cpf.New(try)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
+		errs.HandleError(c, errs.BadRequest("CPF inválido", err))
 		return
 	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
-		fmt.Println(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Campos Inválidos"})
+		errs.HandleError(c, errs.BadRequest("campos inválidos", err))
 		return
 	}
 
-	exists, err := apartamentoService.Exists(body.Apartamento_id)
-
-	if err != nil {
-		fmt.Println("Error checking if apartamento exists:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+	apartamento, appErr := apartmentoModel.FindById(body.Apartamento_id)
+	if appErr != nil {
+		errs.HandleError(c, appErr)
 		return
 	}
-
-	if !exists {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Apartamento não existe"})
+	if apartamento == nil {
+		errs.HandleError(c, errs.BadRequest("Não há apartamento com o id fornecido", nil))
 		return
 	}
 
 	if len(body.Nome) > 100 {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "O nome do morador deve ter no máximo 100 digitos"})
+		errs.HandleError(c, errs.BadRequest("O nome do morador deve ter no máximo 100 digitos", nil))
 		return
 	}
 
 	// TODO: Validate if phone only has numbers, spaces and dashes (Regex)
 	if len(body.Telefone) > 15 {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "O telefone deve ter no máximo 15 digitos"})
+		errs.HandleError(c, errs.BadRequest("O telefone deve ter no máximo 15 digitos", nil))
 		return
 	}
 
-	err = moradorModel.Patch(cpf, body)
-
+	appErr = moradorModel.Patch(cpf, body)
 	if err != nil {
 		fmt.Println("Error updating morador:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})

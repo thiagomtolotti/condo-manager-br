@@ -1,8 +1,8 @@
 package vagaController
 
 import (
+	"backend/errs"
 	vagaModel "backend/models/vaga"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,25 +10,16 @@ import (
 )
 
 func Delete(c *gin.Context) {
-	id := c.Param("id")
-
-	uuid, err := uuid.Parse(id)
-
+	try := c.Param("id")
+	id, err := uuid.Parse(try)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Id inválido"})
+		errs.HandleError(c, errs.BadRequest("id inválido", err))
 		return
 	}
 
-	success, queryErr := vagaModel.Delete(uuid)
-
-	if queryErr != nil {
-		fmt.Println("Error deleting parking space:", queryErr)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
-		return
-	}
-
-	if !success {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Id inválido"})
+	appErr := vagaModel.Delete(id)
+	if appErr != nil {
+		errs.HandleError(c, appErr)
 		return
 	}
 

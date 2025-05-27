@@ -2,6 +2,7 @@ package vagaModel
 
 import (
 	"backend/db"
+	"backend/errs"
 	"backend/schemas"
 	"backend/utils"
 	"context"
@@ -10,12 +11,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func Create(apartamento_id uuid.UUID, body schemas.Vaga) (uuid.UUID, error) {
+func Create(apartamento_id uuid.UUID, body schemas.Vaga) (uuid.UUID, *errs.AppError) {
 	var id uuid.UUID
 	query, err := utils.LoadSQL("vaga/create.sql")
 
 	if err != nil {
-		return uuid.UUID{}, fmt.Errorf("error reading create vaga sql: %w", err)
+		var err = errs.Unexpected(fmt.Errorf("reading create vaga SQL file: %w", err))
+		return uuid.UUID{}, err
 	}
 
 	err = db.Connection.QueryRow(
@@ -24,9 +26,8 @@ func Create(apartamento_id uuid.UUID, body schemas.Vaga) (uuid.UUID, error) {
 		apartamento_id,
 		body.Numero,
 	).Scan(&id)
-
 	if err != nil {
-		return uuid.UUID{}, err
+		return uuid.UUID{}, errs.Unexpected(fmt.Errorf("creating vaga in DB: %w", err))
 	}
 
 	return id, nil

@@ -2,17 +2,18 @@ package moradorModel
 
 import (
 	"backend/db"
+	"backend/errs"
 	"backend/schemas"
 	"backend/utils"
 	"context"
 	"fmt"
 )
 
-func Create(data schemas.Morador) error {
+func Create(data schemas.Morador) *errs.AppError {
 	query, err := utils.LoadSQL("morador/create.sql")
-
 	if err != nil {
-		return fmt.Errorf("error reading create morador sql file: %w", err)
+		var err = errs.Unexpected(fmt.Errorf("reading create morador SQL file: %w", err))
+		return err
 	}
 
 	_, err = db.Connection.Exec(
@@ -25,8 +26,8 @@ func Create(data schemas.Morador) error {
 		data.Responsavel,
 		data.Proprietario,
 	)
-
 	if err != nil {
+		var err = errs.Unexpected(fmt.Errorf("creating morador query: %w", err))
 		return err
 	}
 

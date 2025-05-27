@@ -1,12 +1,11 @@
 package moradorController
 
 import (
+	"backend/errs"
+	apartmentoModel "backend/models/apartamento"
 	moradorModel "backend/models/morador"
 	"backend/schemas"
-	apartamentoService "backend/services/apartamento"
-	moradorService "backend/services/morador"
 	"backend/utils/cpf"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,59 +16,50 @@ func Create(c *gin.Context) {
 
 	// TODO: Validate requests body on middleware
 	if err := c.ShouldBindJSON(&body); err != nil {
-		fmt.Println(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Campos Inválidos"})
+		errs.HandleError(c, errs.BadRequest("campos inválidos", err))
 		return
 	}
 
 	cpf, err := cpf.New(body.Cpf)
-
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido"})
-	}
-
-	isValid, err := moradorService.Validate(cpf)
-
-	if err != nil {
-		fmt.Println("Error validating CPF:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+		errs.HandleError(c, errs.BadRequest("CPF inválido", err))
 		return
 	}
 
-	if !isValid {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "CPF Inválido ou com morador já cadastrado"})
+	morador, appErr := moradorModel.FindByCPF(cpf)
+	if appErr != nil {
+		errs.HandleError(c, appErr)
+		return
+	}
+	if morador != nil {
+		errs.HandleError(c, errs.BadRequest("Já existe um morador com este id", nil))
 		return
 	}
 
-	validApartment, err := apartamentoService.Exists(body.Apartamento_id)
-
-	if err != nil {
-		fmt.Println("Error querying apartment: ", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+	apartamento, appErr := apartmentoModel.FindById(body.Apartamento_id)
+	if appErr != nil {
+		errs.HandleError(c, appErr)
 		return
 	}
-
-	if !validApartment {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Apartamento inválido"})
+	if apartamento == nil {
+		errs.HandleError(c, errs.BadRequest("Não há apartamento com este id", nil))
 		return
 	}
 
 	if len(body.Nome) > 100 {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "O nome do morador deve ter no máximo 100 digitos"})
+		errs.HandleError(c, errs.BadRequest("O nome do morador deve ter no máximo 100 digitos", err))
 		return
 	}
 
 	// TODO: Validate if phone only has numbers, spaces and dashes (Regex)
 	if len(body.Telefone) > 15 {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "O telefone deve ter no máximo 15 digitos"})
+		errs.HandleError(c, errs.BadRequest("O telefone deve ter no máximo 15 dígitos", nil))
 		return
 	}
 
-	err = moradorModel.Create(body)
-
-	if err != nil {
-		fmt.Println("Error creating user: ", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error"})
+	appErr = moradorModel.Create(body)
+	if appErr != nil {
+		errs.HandleError(c, appErr)
 		return
 	}
 

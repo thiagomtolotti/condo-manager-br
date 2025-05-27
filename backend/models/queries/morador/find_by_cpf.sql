@@ -1,0 +1,1 @@
+SELECT * FROM moradores WHERE cpf=$1

@@ -1,0 +1,1 @@
+SELECT * FROM apartamentos WHERE id=$1
