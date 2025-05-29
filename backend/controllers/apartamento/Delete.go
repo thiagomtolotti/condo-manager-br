@@ -3,6 +3,7 @@ package apartamentoController
 import (
 	"backend/errs"
 	apartamentoModel "backend/models/apartamento"
+	moradorModel "backend/models/morador"
 	"backend/utils"
 	"net/http"
 
@@ -20,10 +21,20 @@ func Delete(c *gin.Context) {
 
 	parsedId, _ := uuid.Parse(id)
 
-	err := apartamentoModel.Delete(parsedId)
+	has_morador, err := moradorModel.HasMoradorInApartamento(parsedId)
+	if err != nil {
+		errs.HandleError(c, err)
+		return
+	}
 
-	// TODO: Check if apartamento has moradores (if it has throws an error on deleting)
+	if has_morador {
+		errs.HandleError(c, errs.BadRequest("Há moradores no apartamento", nil))
+		return
+	}
+
 	// TODO: Check if apartamento has vagas (if it has throws an error on deleting)
+
+	err = apartamentoModel.Delete(parsedId)
 	if err != nil {
 		errs.HandleError(c, err)
 		return
