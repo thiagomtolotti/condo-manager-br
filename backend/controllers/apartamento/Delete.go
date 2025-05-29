@@ -4,6 +4,7 @@ import (
 	"backend/errs"
 	apartamentoModel "backend/models/apartamento"
 	moradorModel "backend/models/morador"
+	vagaModel "backend/models/vaga"
 	"backend/utils"
 	"net/http"
 
@@ -32,7 +33,16 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	// TODO: Check if apartamento has vagas (if it has throws an error on deleting)
+	has_vaga, err := vagaModel.ApartamentoHasVaga(parsedId)
+	if err != nil {
+		errs.HandleError(c, err)
+		return
+	}
+
+	if has_vaga {
+		errs.HandleError(c, errs.BadRequest("Há vagas relacionadas ao apartamento", nil))
+		return
+	}
 
 	err = apartamentoModel.Delete(parsedId)
 	if err != nil {
