@@ -22,7 +22,7 @@ func Delete(c *gin.Context) {
 
 	parsedId, _ := uuid.Parse(id)
 
-	has_morador, err := moradorModel.HasMoradorInApartamento(parsedId)
+	has_morador, err := moradorModel.ApartamentoHasMorador(parsedId)
 	if err != nil {
 		errs.HandleError(c, err)
 		return

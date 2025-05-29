@@ -10,8 +10,8 @@ import (
 	"github.com/google/uuid"
 )
 
-func HasMoradorInApartamento(apartamento_id uuid.UUID) (bool, *errs.AppError) {
-	query, err := utils.LoadSQL("morador/has_morador_apartamento.sql")
+func ApartamentoHasMorador(apartamento_id uuid.UUID) (bool, *errs.AppError) {
+	query, err := utils.LoadSQL("morador/apartamento_has_morador.sql")
 	if err != nil {
 		return false, errs.Unexpected(fmt.Errorf("Reading has morador in apartment sql file: %w", err))
 	}
