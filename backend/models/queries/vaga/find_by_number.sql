@@ -1,0 +1,1 @@
+SELECT * FROM vagas WHERE numero = $1;

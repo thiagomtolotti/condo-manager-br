@@ -35,7 +35,16 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	// TODO: Check if vaga with given number exists
+	vaga, appErr := vagaModel.FindByNumber(body.Numero)
+	if appErr != nil {
+		errs.HandleError(c, appErr)
+		return
+	}
+	if vaga != nil {
+		errs.HandleError(c, errs.BadRequest("Já existe uma vaga com esse número", nil))
+		return
+	}
+
 	vagaId, appErr := vagaModel.Create(apartamento_id, body)
 	if appErr != nil {
 		errs.HandleError(c, appErr)
