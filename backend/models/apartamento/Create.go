@@ -12,12 +12,6 @@ import (
 )
 
 func CreateApartamento(apartamento schemas.Apartamento) (uuid.UUID, *errs.AppError) {
-	// TODO: Validate length of bloco in controller
-	if len(apartamento.Bloco) > 10 {
-		var err = errs.BadRequest("Apartamento block must be max 10 characters long", nil)
-		return uuid.UUID{}, err
-	}
-
 	var id uuid.UUID
 
 	sql, err := utils.LoadSQL("apartamento/create.sql")
