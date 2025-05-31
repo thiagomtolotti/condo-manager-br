@@ -1,1 +1,1 @@
-SELECT COUNT(*) FROM vagas
+SELECT COUNT(*) FROM vagas;

@@ -1,1 +1,1 @@
-INSERT INTO apartamentos (numero, bloco) VALUES ($1, $2) RETURNING id
+INSERT INTO apartamentos (numero, bloco) VALUES ($1, $2) RETURNING id;

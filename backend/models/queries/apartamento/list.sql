@@ -1,1 +1,3 @@
-SELECT * FROM apartamentos LIMIT $1 OFFSET $2
+SELECT 
+	id, numero, bloco 
+FROM apartamentos LIMIT $1 OFFSET $2;

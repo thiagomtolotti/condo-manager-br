@@ -1,1 +1,1 @@
-DELETE FROM apartamentos WHERE id=$1
+DELETE FROM apartamentos WHERE id = $1;

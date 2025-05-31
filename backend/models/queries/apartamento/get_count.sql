@@ -1,1 +1,1 @@
-SELECT COUNT(*) FROM apartamentos
+SELECT COUNT(*) FROM apartamentos;
