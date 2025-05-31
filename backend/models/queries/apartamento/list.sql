@@ -1,3 +1,3 @@
 SELECT 
-	numero, bloco 
-FROM apartamentos LIMIT $1 OFFSET $2
+	id, numero, bloco 
+FROM apartamentos LIMIT $1 OFFSET $2;
