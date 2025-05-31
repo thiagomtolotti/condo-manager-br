@@ -2,7 +2,7 @@ package cpf
 
 import (
 	"errors"
-	"strings"
+	"regexp"
 	"unicode"
 	"unicode/utf8"
 )
@@ -23,12 +23,11 @@ func New(s string) (CPF, error) {
 
 var ErrInvalidCPF = errors.New("Invalid cpf")
 
-func cleanCPF(s string) string {
-	// TODO: Use regex instead of ReplaceAll
-	s = strings.ReplaceAll(s, ".", "")
-	s = strings.ReplaceAll(s, "-", "")
+func cleanCPF(cpf string) string {
+	reg := regexp.MustCompile(`[.-]`)
+	cpf = reg.ReplaceAllString(cpf, "")
 
-	return s
+	return cpf
 }
 
 // https://www.macoratti.net/alg_cpf.htm
