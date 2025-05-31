@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -22,8 +23,7 @@ func FindByCPF(cpf cpf.CPF) (*schemas.Morador, *errs.AppError) {
 		return nil, err
 	}
 
-	// TODO: Use pgxscan to scan all fields at once
-	err = db.Connection.QueryRow(context.Background(), query, cpf.Value).Scan(&morador.Cpf, &morador.Apartamento_id, &morador.Nome, &morador.Telefone, &morador.Responsavel, &morador.Proprietario)
+	err = pgxscan.Select(context.Background(), db.Connection, &morador, query, cpf.Value)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}

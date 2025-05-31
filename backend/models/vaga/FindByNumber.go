@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -19,16 +20,10 @@ func FindByNumber(number int) (*schemas.VagaWithApartment, *errs.AppError) {
 	}
 
 	var vaga schemas.VagaWithApartment
-	err = db.Connection.QueryRow(context.Background(), query, number).Scan(
-		&vaga.Id,
-		&vaga.Numero,
-		&vaga.Apartamento_id,
-	)
-
+	err = pgxscan.DefaultAPI.Get(context.Background(), db.Connection, &vaga, query, number)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}
-
 	if err != nil {
 		return nil, errs.Unexpected(fmt.Errorf("querying vaga by number: %w", err))
 	}

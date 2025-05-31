@@ -20,7 +20,6 @@ func Delete(id uuid.UUID) *errs.AppError {
 	if err != nil {
 		return errs.Unexpected(fmt.Errorf("deleting vaga in DB %w", err))
 	}
-
 	if result.RowsAffected() == 0 {
 		return errs.BadRequest("nenhuma vaga com o id encontrada", nil)
 	}

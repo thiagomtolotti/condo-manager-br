@@ -6,6 +6,8 @@ import (
 	"backend/utils"
 	"context"
 	"fmt"
+
+	"github.com/georgysavva/scany/v2/pgxscan"
 )
 
 func GetCount() (int, *errs.AppError) {
@@ -17,7 +19,7 @@ func GetCount() (int, *errs.AppError) {
 		return 0, err
 	}
 
-	err = db.Connection.QueryRow(context.Background(), query).Scan(&total)
+	err = pgxscan.Select(context.Background(), db.Connection, &total, query)
 	if err != nil {
 		var err = errs.Unexpected(fmt.Errorf("querying apartamento count: %w", err))
 		return 0, err

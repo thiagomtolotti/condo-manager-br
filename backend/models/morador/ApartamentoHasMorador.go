@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/google/uuid"
 )
 
@@ -17,7 +18,7 @@ func ApartamentoHasMorador(apartamento_id uuid.UUID) (bool, *errs.AppError) {
 	}
 
 	var has_morador bool
-	err = db.Connection.QueryRow(context.Background(), query, apartamento_id.String()).Scan(&has_morador)
+	err = pgxscan.Select(context.Background(), db.Connection, &has_morador, query, apartamento_id.String())
 	if err != nil {
 		return false, errs.Unexpected(fmt.Errorf("Querying has morador in apartment: %w", err))
 	}

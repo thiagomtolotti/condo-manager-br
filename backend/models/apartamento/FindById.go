@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 )
@@ -21,7 +22,7 @@ func FindById(id uuid.UUID) (*schemas.ApartamentoWithId, *errs.AppError) {
 		return nil, errs.Unexpected(fmt.Errorf("reading find apartamento by id SQL file: %w", err))
 	}
 
-	err = db.Connection.QueryRow(context.Background(), query, id.String()).Scan(&apartamento.Id, &apartamento.Numero, &apartamento.Bloco)
+	err = pgxscan.DefaultAPI.Get(context.Background(), db.Connection, &apartamento, query, id.String())
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}
