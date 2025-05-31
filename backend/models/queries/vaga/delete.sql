@@ -1,1 +1,1 @@
-DELETE FROM vagas WHERE id = $1
+DELETE FROM vagas WHERE id = $1;

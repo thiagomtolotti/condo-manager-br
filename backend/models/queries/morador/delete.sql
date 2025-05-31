@@ -1,1 +1,1 @@
-DELETE FROM moradores WHERE cpf=$1
+DELETE FROM moradores WHERE cpf=$1;

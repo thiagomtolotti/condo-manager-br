@@ -1,1 +1,1 @@
-SELECT COUNT(*) FROM moradores
+SELECT COUNT(*) FROM moradores;

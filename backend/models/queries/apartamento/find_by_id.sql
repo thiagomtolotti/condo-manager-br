@@ -1,1 +1,1 @@
-SELECT * FROM apartamentos WHERE id=$1
+SELECT (numero, bloco) FROM apartamentos WHERE id = $1;
