@@ -18,6 +18,12 @@ func Create(c *gin.Context) {
 		return
 	}
 
+	if len(body.Bloco) > 10 {
+		var err = errs.BadRequest("Apartamento block must be max 10 characters long", nil)
+		errs.HandleError(c, err)
+		return
+	}
+
 	id, err := apartamentoModel.CreateApartamento(body)
 	if err != nil {
 		errs.HandleError(c, err)

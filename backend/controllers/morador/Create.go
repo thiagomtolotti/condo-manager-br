@@ -5,6 +5,7 @@ import (
 	apartmentoModel "backend/models/apartamento"
 	moradorModel "backend/models/morador"
 	"backend/schemas"
+	"backend/utils"
 	"backend/utils/cpf"
 	"net/http"
 
@@ -51,9 +52,8 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	// TODO: Validate if phone only has numbers, spaces and dashes (Regex)
-	if len(body.Telefone) > 15 {
-		errs.HandleError(c, errs.BadRequest("O telefone deve ter no máximo 15 dígitos", nil))
+	if !utils.ValidatePhone(body.Telefone) {
+		errs.HandleError(c, errs.BadRequest("Telefone inválido", nil))
 		return
 	}
 
