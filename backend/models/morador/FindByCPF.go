@@ -23,7 +23,7 @@ func FindByCPF(cpf cpf.CPF) (*schemas.Morador, *errs.AppError) {
 		return nil, err
 	}
 
-	err = pgxscan.Select(context.Background(), db.Connection, &morador, query, cpf.Value)
+	err = pgxscan.Get(context.Background(), db.Connection, &morador, query, cpf.Value)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}

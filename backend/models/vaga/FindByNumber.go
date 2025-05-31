@@ -20,7 +20,7 @@ func FindByNumber(number int) (*schemas.VagaWithApartment, *errs.AppError) {
 	}
 
 	var vaga schemas.VagaWithApartment
-	err = pgxscan.DefaultAPI.Get(context.Background(), db.Connection, &vaga, query, number)
+	err = pgxscan.Get(context.Background(), db.Connection, &vaga, query, number)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}

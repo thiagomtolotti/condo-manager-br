@@ -19,7 +19,7 @@ func GetCount() (int, *errs.AppError) {
 		return 0, err
 	}
 
-	err = pgxscan.Select(context.Background(), db.Connection, &total, query)
+	err = pgxscan.Get(context.Background(), db.Connection, &total, query)
 	if err != nil {
 		var err = errs.Unexpected(fmt.Errorf("querying apartamento count: %w", err))
 		return 0, err

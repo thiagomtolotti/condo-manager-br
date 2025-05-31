@@ -22,7 +22,7 @@ func FindById(id uuid.UUID) (*schemas.ApartamentoWithId, *errs.AppError) {
 		return nil, errs.Unexpected(fmt.Errorf("reading find apartamento by id SQL file: %w", err))
 	}
 
-	err = pgxscan.DefaultAPI.Get(context.Background(), db.Connection, &apartamento, query, id.String())
+	err = pgxscan.Get(context.Background(), db.Connection, &apartamento, query, id.String())
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}

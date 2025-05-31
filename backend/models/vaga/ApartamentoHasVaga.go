@@ -18,7 +18,7 @@ func ApartamentoHasVaga(apartamento_id uuid.UUID) (bool, *errs.AppError) {
 	}
 
 	var has_vaga bool
-	err = pgxscan.Select(context.Background(), db.Connection, &has_vaga, query, apartamento_id.String())
+	err = pgxscan.Get(context.Background(), db.Connection, &has_vaga, query, apartamento_id.String())
 	if err != nil {
 		return false, errs.Unexpected(fmt.Errorf("querying apartamento has vaga: %w", err))
 	}
