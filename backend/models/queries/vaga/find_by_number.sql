@@ -1,1 +1,1 @@
-SELECT (id, numero, apartamento_id) FROM vagas WHERE numero = $1;
+SELECT id, numero, apartamento_id FROM vagas WHERE numero = $1;
