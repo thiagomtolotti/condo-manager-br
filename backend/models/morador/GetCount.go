@@ -18,7 +18,7 @@ func GetCount() (int, *errs.AppError) {
 	}
 
 	var total int
-	err = pgxscan.Select(context.Background(), db.Connection, &total, query)
+	err = pgxscan.Get(context.Background(), db.Connection, &total, query)
 	if err != nil {
 		var err = errs.Unexpected(fmt.Errorf("querying moradores total count: %w", err))
 		return 0, err
